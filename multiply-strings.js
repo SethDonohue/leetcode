@@ -1,45 +1,52 @@
 var multiply = function(num1, num2) {
 	let result = '0';
-	let newNumOne = num1;
-	let newNumTwo = num2;
+	let products = [];
 
-	if(num1 == '0') return num2;
-	if(num2 == '0') return num1;
+	if(num1 == '0' || num2 == '0') return '0';
 	// Long hand Multiplication
 	// pad shorter string with zeros
 	const padWithZeros = (shorterString, longerString) => {
-		console.log('Got to Padder');
 		while(shorterString.length < longerString.length){
-			console.log('Shorter Before: ', shorterString);
 			shorterString = '0' + shorterString;
-			console.log('Shorter After: ', shorterString);
-			}
-		console.log(shorterString, longerString);
+		}
 		return { shorterString, longerString };
 	};
 
-	console.log(num1.length, num2.length);
-	if(newNumOne.length > newNumTwo.length){
-//		padWithZeros(newNumTwo, newNumOne).num1 = num1;
-//		padWithZeros(newNumTwo, newNumOne).num2 = num2;
-	} else if(newNumTwo.length > newNumOne.length) {
-//		padWithZeros(newNumOne, newNumTwo).num1 = num1;
-//		padWithZeros(newNumOne, newNumTwo).num2 = num2;
-			console.log(padWithZeros(num1, num2));
+	if(num1.length > num2.length){
+		num2 = padWithZeros(num2, num1).shorterString;
+	} else if(num2.length > num1.length) {
+		num1 = padWithZeros(num1, num2).shorterString;
 	}
 
-	console.log('After pad: ', num1, num2);
-
-	//while(
-
 	// multiply each char by all the other chars in the longer string
-
+	const	loop = num1.toString().length;
+	let multiplier = 1;
+	for(let i = loop - 1; i >= 0; i--){
+		let tempProduct = [];
+		let carry = 0;
+		for(let j = loop - 1; j >= 0; j--){
+			let tempSum = parseInt(num1[i]) * parseInt(num2[j]) + carry;
+			if(tempSum > 9){
+				tempProduct[j] = (tempSum % 10);
+		//		console.log(tempSum, tempProduct[j]);
+				carry = Math.floor(tempSum / 10);
+			} else {
+				tempProduct[j] = tempSum.toString();
+			}
+		}
+		if(carry > 0){
+			tempProduct.unshift(carry);
+		}
+//		console.log(tempProduct.join(''));
+		products.push(parseInt(tempProduct.join(''))*multiplier);
+		multiplier *= 10;
+	//	console.log('Multiplier: ', multiplier);
+	}
 	// sum the results together
-	
+	//console.log('Products before sum: ', products);
+	result = products.reduce((accum, curr) => accum + curr);
 
-	return result;
+	return result.toString();
 };
-
-multiply('10', '100000');
 
 module.exports = multiply;
